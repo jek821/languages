@@ -61,7 +61,17 @@ public class Jek {
         }
     }
 
+    // Some basic error handling logic for reporting and then printing reported errors
+    // with a bit of context
 
+    static void error(int Line, String message){
+        report(line, message);
+    }
+
+    private static void report(int line, String message) {
+        System.err.println("[line " + line + "] ERROR: " + message);
+        hadError = true;
+    }
 
 
 
