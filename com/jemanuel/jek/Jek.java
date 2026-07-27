@@ -8,7 +8,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
+
+// Error Codes are based on freebsd sysexits.h "standard"
+// https://man.freebsd.org/cgi/man.cgi?query=sysexits&apropos=0&sektion=0&manpath=FreeBSD+4.3-RELEASE&format=html
+
 public class Jek {
+    static boolean hadError = false;
+
     public static void main(String[] args) throws IOException {
         if (args.length > 1) {
             System.out.println("Usage: jek [script]");
@@ -27,6 +33,8 @@ public class Jek {
     byte[] bytes = Files.readAllBytes(Paths.get(path));
     // Turn file bytes into a String object and pass to run()
     run(new String(bytes, Charset.defaultCharset()));
+
+    if (hadError) System.exit(65);
     }
 
     // Function to run repl (no file passed in, so instead user can just enter lines to execute)
@@ -41,6 +49,7 @@ public class Jek {
                 break;
             }
             run(line);
+            hadError = false;
 
         }
     }
