@@ -1,3 +1,23 @@
-Scanning:
+Chapters 1-2 (introduction):
+
+End of Chapter Challenges:
+
+1. Poke around in an open source language compiler implementation, find the code implementing the scanner and parse, are they hand written, or generated using tools like Lex and Yacc (.l or .y files show this)
+
+For this I am going to be exploring the Clang C compiler in the LLVM open source repository. 
+
+inside the repo in dir clang/lib/ I see directories called Lex and Parse, I assume these are what i'm looking for. There are a ton of files in the Lex directory, but two that stand out the most are Lexer.cpp and TokenLexer.cpp. 
+
+Seems like the Lexer.cpp is the "scanner" responsible for turning raw source code characters into "tokens", this stuff is massive, and does not appear to utilize any kind of generator, but all appears to be written by hand in C++. 
+
+Now looking at the clang/lib/Parse directory, it is a bit strange, initially the two files that stood out to me the most were ParseAST.cpp and Parser.cpp. I felt a bit confused, because Parse AST sounds like the act of walking the AST for code generation purposes, which obviously does not belong in the parser, whos job is to turn the scanend tokens into the AST. After doing some reasearch, I now understand that the ParseAST.cpp file is the main parser file that utilizes all of the others to parse the tokens into the AST, most of the other files in this directory are for defining the parsing logic needed for parsing particular tokens from Objects to statements and expressions, all of which the ParseAST.cpp file uses to orchestrate the parsing of the tokens into an AST. Also just like the lexer, the parser does not use any generation for the parsing logic, all files are written by hand in C++. 
 
 
+2. Just in time compilation (JIT), tends to be the fastest way to implement a dynamically typed language, but not all dyanmically typed languages use this process of compilation, why is this?
+
+JIT is a strategic compilation process that mixes compiling to machine code and compiling to bytecode for a runtime. Java is a prime example of this. A program is first compiled to bytecode to run in the JVM, but as the program runs the runtime identifies hotspots in the program, and chooses to compile those strenuous areas of code into machine code, so that they can run more efficiently on the machines unique architecture. This complexity makes JIT compilers much harder to create and mantain, the compiler needs to be much smarter, and perform optimizations on the fly, leveraging both benefits of bytecode compilation and native machine code compilation. 
+
+
+3. Most Lisp implementations that compile to C also contain an interpreter that lets them execute Lisp code on the fly as well. Why?
+
+in Lisp "macros" are very different from macros in C, instead of just replacing keywords with some other text, macors need to actually run Lisp code to "generate" the data they represent, and when a compiler executes code that makes it an interpreter, so even though it may finish the compilation process by compiling to C, during that pre-processing, it needs some Lisp runtime to generate the macros, which is the interpreter.
