@@ -21,4 +21,48 @@ public class Jek {
 
     }
 
+
+    // Take in file path, use Paths to get system path, then use Files.read... to get all bytes
+    private static void runFile(String path) throws IOException{
+    byte[] bytes = Files.readAllBytes(Paths.get(path));
+    // Turn file bytes into a String object and pass to run()
+    run(new String(bytes, Charset.defaultCharset()));
+    }
+
+    // Function to run repl (no file passed in, so instead user can just enter lines to execute)
+    private static void runPrompt() throws IOException {
+        InputStreamReader input = new InputStreamReader(System.in);
+        BufferedReader reader = new BufferedReader(input);
+
+        while (true) {
+            System.out.print("> ");
+            String line = reader.readLine();
+            if (line == null) {
+                break;
+            }
+            run(line);
+
+        }
+    }
+
+    // Now we have the two wrapper functions for our run() method, one for using it on a files bytes
+    // and another for use in a repl
+    // Now lets actually write the run function that both of the previous methods will call
+
+    private static void run(String source) {
+        // initialize our scanner, and pass in the source code string, then use scanTokens()
+        // to return the tokens from the source code
+        Scanner scanner = new Scanner(source);
+        List<Token> tokens = scanner.scanTokens();
+
+        // print out the tokens returned by the Scanner
+        for (Token token : tokens){
+            System.out.println(token);
+        }
+    }
+
+
+
+
+
 }
